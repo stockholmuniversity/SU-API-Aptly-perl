@@ -1,0 +1,137 @@
+=head1 NAME
+
+SU::API::Aptly
+
+=head1 SYNOPSIS
+
+    use strict;
+    use warnings;
+
+    use SU::API::Aptly;
+
+    my $aptly = SU::API::Aptly->new;
+    $aptly->login or die $aptly->{login_status};
+
+    my $get_result = $aptly->do_request(method => "GET", url => "/publish");
+    if (! $get_result) {
+        warn $aptly->request_code;
+        warn $aptly->request_status_line;
+    };
+
+    my $post_result = $aptly->do_request(method => "POST", uri => "/publish/xenial-security", data => $data)
+    if (! $post_result) {
+        warn $aptly->request_code;
+        warn $aptly->request_status_line;
+    };
+
+    my $put_result = $aptly->do_request(method => "PUT", uri => "/publish/xenial-security/unstable", data => $data);
+    if (! $put_result) {
+        warn $aptly->request_code;
+        warn $aptly->request_status_line;
+    };
+
+    my $delete_result = $aptly->do_request(method => "DELETE", uri => "/snapshots/xenial-security-20170308164201");
+    if (! $delete_result) {
+        warn $aptly->request_code;
+        warn $aptly->request_status_line;
+    };
+
+=head1 DESCRIPTION
+
+Module used to integrate with the REST API that Aptly provides.
+
+=head1 CONSTRUCTOR
+
+=over
+
+=item new (hostname => "HOSTNAME", port => "PORT", ssl => 1, timeout => "TIMEOUT")
+
+Returns a new SU::API::Aptly object.
+
+"HOSTNAME" is optional. Hostname of the API host. Defaults to localhost if not set.
+
+"PORT" is optional. HTTP port. Defaults to 80 if not set. Defaults to 443 if SSL is set.
+
+"SSL" is optional. Defaults to off if unset.
+
+"TIMEOUT" is optional. Uses LWP UserAgent default is not set.
+
+=back
+
+=head1 METHODS
+
+=over
+
+=item login (USERNAME, PASSWORD)
+
+Configure and validate credantials.
+
+Requests will be made unautenticated if USERNAME and PASSWORD is not set.
+
+=item login_status
+
+Returns a human readable login status of the current session.
+
+=item logged_in
+
+Returns true when logged in, otherwise returns undef.
+
+=item do_request (method => "HTTP METHOD", uri => "URI", params => "PARAMS", data => "DATA", plaintext => 1)
+
+Perform the actual request.
+
+"PARAMS" is optional and can be any parameters that the Aptly API supports.
+
+"DATA" is optional and is a Perl data structure that will be converted to JSON.
+
+"plaintext" is optional and returns response as JSON.
+
+Returns the result in a perl reference.
+
+=item request_code
+
+Returns the last HTTP status code.
+
+=item request_status_line
+
+Returns the last HTTP status line.
+
+=back
+
+=head1 DEPENDS
+
+L<LWP::UserAgent>,
+L<HTTP::Request>,
+L<URI::Escape>,
+L<JSON>,
+L<Encode>
+
+=head1 LICENSE
+
+Copyright (c) 2016-, IT Services, Stockholm University
+
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+following conditions are met:
+
+Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+disclaimer.
+
+Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
+disclaimer in the documentation and/or other materials provided with the distribution.
+
+Neither the name of Stockholm University nor the names of its contributors may be used to endorse or promote products
+derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+=head1 AUTHOR
+
+Christian Biamont <christian.biamont@su.se>
