@@ -80,7 +80,7 @@ sub do_request {
     }
     if ($params) {
         $params = encode_params($params);
-        $request_url = "$self->{url}/${uri}?$params";
+        $request_url = "$self->{url}${uri}?$params";
     };
 
     my $req = HTTP::Request->new($method => $request_url);
