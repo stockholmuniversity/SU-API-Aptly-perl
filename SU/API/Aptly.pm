@@ -70,7 +70,7 @@ sub do_request {
 
     my $content_type;
 
-    if ($method eq "POST" or $method eq "PUT"){
+    if ($method eq "POST" or $method eq "PUT" or $method eq "DELETE"){
         if ($data) {
            $data = encode_json($data);
         }
